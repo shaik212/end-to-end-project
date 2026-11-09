@@ -1,0 +1,53 @@
+services:
+  product-catalog:
+    image: product-catalog:local
+    build:
+      context: .
+      dockerfile: src/product-catalog/Dockerfile
+    ports:
+      - "3550:3550"
+    environment:
+      - PRODUCT_CATALOG_PORT=3550
+  
+  payment:
+    image: payment:local
+    build:
+      context: .
+      dockerfile: src/payment/Dockerfile
+    ports:
+      - "50051:50051"
+    environment:
+      - PAYMENT_PORT=50051
+
+  shipping:
+    image: shipping:local
+    build:
+      context: .
+      dockerfile: src/shipping/Dockerfile
+    ports:
+      - "50050:50050"
+    environment:
+      - SHIPPING_PORT=50050
+
+  email:
+    image: email:local
+    build:
+      context: .
+      dockerfile: src/email/Dockerfile
+    ports:
+      - "6060:6060"
+    environment:
+      - EMAIL_PORT=6060
+      - APP_ENV=production
+  currency:
+    image: ghcr.io/open-telemetry/demo:2.1.3-currency
+    ports:
+      - "7001:7001"
+    environment:
+      - CURRENCY_PORT=7001
+      - VERSION=2.1.3
+  valkey-cart:
+    image: valkey/valkey:8-alpine
+    ports:
+      - "6379:6379"
+    
