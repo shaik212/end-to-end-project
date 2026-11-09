@@ -46,8 +46,41 @@ services:
     environment:
       - CURRENCY_PORT=7001
       - VERSION=2.1.3
+
   valkey-cart:
     image: valkey/valkey:8-alpine
     ports:
       - "6379:6379"
+
+  cart:
+    image: ghcr.io/open-telemetry/demo:2.1.3-cart
+    ports:
+      - "7070:7070"
+    environment:
+      - ASPNETCORE_HTTP_PORTS=7070
+      - VALKEY_ADDR=valkey-cart:6379
+    depends_on:
+      - valkey-cart
+  checkout:
+    image: checkout:local
+    build:
+      context: .
+      dockerfile: src/checkout/Dockerfile
+    ports:
+      - "5050:5050"
+    environment:
+      - CHECKOUT_PORT=5050
+      - PRODUCT_CATALOG_ADDR=product-catalog:3550
+      - PAYMENT_ADDR=payment:50051
+      - SHIPPING_ADDR=shipping:50050
+      - EMAIL_ADDR=email:6060
+      - CART_ADDR=cart:7070
+      - CURRENCY_ADDR=currency:7001
+    depends_on:
+      - product-catalog
+      - payment
+      - shipping
+      - email
+      - cart
+      - currency
     
