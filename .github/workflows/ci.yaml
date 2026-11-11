@@ -5,9 +5,12 @@ on:
       - devops-from-scratch
 
 jobs:
-  build-payment:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        service: [payment, shipping, email, checkout]
     steps:
       - uses: actions/checkout@v3
-      - name: build payment image
-        run: docker build -t payment:local -f src/payment/Dockerfile .  
+      - name: build ${{ matrix.service }} image
+        run: docker build -t ${{ matrix.service }}:local -f src/${{ matrix.service }}/Dockerfile .  
