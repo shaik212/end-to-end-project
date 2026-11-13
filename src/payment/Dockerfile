@@ -1,4 +1,4 @@
-FROM node:22-alpine
+FROM node:24-alpine
 WORKDIR /app
 COPY src/payment/package.json src/payment/package-lock.json ./
 RUN npm ci --omit=dev
